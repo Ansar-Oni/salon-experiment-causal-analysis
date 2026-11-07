@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.ipynb_checkpoints/
+
+# Local data and generated outputs
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+outputs/*
+!outputs/.gitkeep
+reports/figures/*
+!reports/figures/.gitkeep
+
+# Secrets / local configuration
+.env
+*.pem
+.DS_Store
+Thumbs.db

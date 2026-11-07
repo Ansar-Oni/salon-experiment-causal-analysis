@@ -1,0 +1,19 @@
+field_name,data_type,definition,source_table,requiredness,validation_or_caveat
+appointment_id,string,Unique appointment or appointment-line identifier,Appointments,Required,Check uniqueness and row grain
+client_id,string,Pseudonymous stable client identifier; blank for anonymous walk-ins,Appointments,Nullable,Never infer identity from name similarity alone
+outlet_id,string,Outlet identifier,All sources,Required,Standardise outlet codes
+booking_datetime,datetime,Timestamp when appointment was booked,Appointments,Nullable,Timezone and format must be standardised
+appointment_datetime,datetime,Scheduled appointment slot timestamp,Appointments,Required,Used for slot and no-show logic
+status_raw,string,Original source status,Appointments,Required,Preserve original value
+cancellation_timestamp,datetime,Timestamp cancellation was recorded,Appointments,Nullable,Used in no-show recovery rule
+service_name_raw,string,Outlet-specific original service label,Services,Nullable,Retain alongside canonical service
+service_category,string,Canonical service category,Services,Nullable,Map using approved service mapping
+net_service_revenue_inr,float,"Net service revenue after discount/refund, INR",Services,Nullable,Reconcile against POS
+stylist_id,string,Pseudonymous stylist identifier,Stylists / Services,Nullable,Attribute to delivering stylist
+product_net_revenue_inr,float,"Net product revenue linked to completed visit, INR",Product sales,Nullable,Unlinked retail reported separately
+treatment,integer,"Randomised treatment assignment (1=treatment, 0=control)",Assignment,Required for experiment,One row per client in assignment file
+randomisation_timestamp,datetime,Timestamp client was assigned,Assignment,Required for experiment,Must precede index visit
+message_delivered,integer,Whether intervention message was delivered,CRM,Nullable,Use for compliance; not to redefine ITT
+index_visit_date,date,Date of eligible index visit,Derived,Required,Cohort anchor
+retained_90d,integer,At least one completed follow-up visit within 90 days,Derived,Required for mature cohort,"Exclude immature windows, do not mark as non-returner"
+outlet_month,string,Outlet-month panel key for DiD,Derived,Required for DiD,YYYY-MM
