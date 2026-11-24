@@ -1,133 +1,248 @@
 # Salon Experiment & Causal Analysis
 
-**A/B Test Design · Experiment Evaluation · Difference-in-Differences · CUPED**
+**A/B Testing | Causal Inference | Difference-in-Differences | CUPED | Business Analytics**
 
-A reproducible Python analytics project for a fictional salon and spa chain in Coimbatore, India. The case covers 22 outlets and approximately 300,000 appointment, service, stylist and product-sales records, plus anonymous walk-ins.
+A reproducible Python data science project evaluating the impact of personalised rebooking reminders on customer retention and business performance for a fictional salon and spa chain in Coimbatore, India.
 
-> **Project status:** Repository scaffold and analysis blueprint. No real experiment or historical dataset has been supplied yet, so this repository does not claim any measured treatment effect or business result.
+**Project Status:** Analysis completed using a simulated dataset.
 
-## Business question
+> **Data transparency:** All data used in this project are synthetically generated for educational and portfolio purposes. The results do not represent actual salon business performance or a real-world experiment.
 
-Did the salon chain's initiative genuinely improve customer retention and commercial performance, or can the apparent improvement be explained by seasonality, customer mix, outlet differences or other concurrent changes?
+## 1. Business Problem
 
-## Project objectives
+The business wants to understand whether personalised rebooking reminders can improve customer retention and commercial performance.
 
-1. Design a client-level, 1:1 randomised A/B test for a personalised rebooking reminder.
-2. Use 90-day client retention as the primary outcome; revenue per visit and no-show rate are secondary outcomes.
-3. Audit assignment quality using sample-ratio mismatch (SRM) and pre-treatment balance checks.
-4. Estimate intention-to-treat effects with confidence intervals, t-tests and client-level bootstrap.
-5. Estimate the historical initiative's effect using Difference-in-Differences (DiD), event-study diagnostics and sensitivity checks.
-6. Explore pre-specified segments and apply CUPED / regression adjustment.
-7. Produce a pre-defined GO / NO-GO / EXTEND decision memo.
+The central question:
 
-## Key design choices
+Can personalised reminders increase the probability of customers returning within 90 days compared with standard communication?
 
-- **Randomisation unit:** client ID, assigned once and frozen for the experiment.
-- **Allocation:** 1:1, stratified by outlet and baseline visit-frequency band, with enrolment-week blocking.
-- **Primary metric:** 90-day repeat-visit retention.
-- **Illustrative power assumptions:** 30% baseline retention, +5 percentage-point MDE, two-sided alpha 0.05 and 80% power.
-- **Illustrative sample:** 1,378 clients per arm before the 15% operational buffer; 1,585 per arm after the buffer.
-- **Illustrative calendar duration:** 19.2 weeks including buffered enrolment, 90-day outcome maturation and one-week data lag.
-- **Decision threshold:** the lower bound of the 95% CI must exceed +2.0 percentage points for GO, subject to guardrails and data-quality checks.
+## 2. Project Objectives
 
-All illustrative assumptions must be replaced with measured business baselines before pre-registration. See the full design document in `docs/`.
+- Design and evaluate a client-level 1:1 randomised A/B experiment.
+- Measure 90-day customer retention.
+- Compare treatment and control group performance.
+- Evaluate revenue and appointment outcomes.
+- Perform Difference-in-Differences (DiD) analysis.
+- Apply CUPED adjustment using pre-treatment customer behaviour.
+- Validate randomisation through Sample Ratio Mismatch (SRM).
+- Analyse customer segments and outlet-level performance.
+- Develop data-driven business recommendations.
 
-## Repository structure
+## 3. Dataset Overview
+
+The project uses a custom-generated synthetic dataset.
+
+| Dataset | Description |
+|---|---|
+| Outlets | 22 fictional salon outlets |
+| Customers | 10,000 synthetic customers |
+| Appointments | Synthetic appointment records |
+| Experiment Assignment | Treatment and control allocation |
+| Customer Outcomes | Customer-level retention outcomes |
+
+### Experiment Design
+
+- Randomisation unit: Customer.
+- Allocation: Approximately 50% Treatment and 50% Control.
+- Treatment: Personalised rebooking reminder.
+- Control: Standard communication.
+- Primary metric: 90-day repeat-visit retention.
+- Secondary metrics: Revenue, cancellations and no-shows.
+
+## 4. Technology Stack
+
+- Python
+- Pandas
+- NumPy
+- Matplotlib
+- Seaborn
+- SciPy
+- Jupyter Notebook
+- Git and GitHub
+
+## 5. Repository Structure
 
 ```text
 salon-experiment-causal-analysis/
+│
 ├── README.md
 ├── requirements.txt
 ├── .gitignore
-├── docs/
-│   └── 01_experiment_design_v2.docx
+│
 ├── data/
-│   ├── raw/                 # Keep private source data out of Git
-│   ├── processed/           # Generated analysis tables; normally not committed
+│   ├── outlets.csv
+│   ├── customers.csv
+│   ├── appointments.csv
+│   ├── experiment_assignment.csv
+│   ├── customer_outcomes.csv
 │   ├── data_dictionary_template.csv
 │   └── service_mapping_template.csv
+│
+├── docs/
+│   └── 01_experiment_design_v2.docx
+│
 ├── notebooks/
 │   └── 02_analysis.ipynb
+│
 ├── src/
 │   ├── __init__.py
+│   ├── generate_data.py
 │   ├── data_quality.py
 │   ├── experiment.py
 │   ├── did.py
 │   └── cuped.py
-├── reports/
-│   └── figures/
-└── outputs/                 # Generated tables and memo inputs
+│
+└── reports/
 ```
 
-## Data required
+## 6. Analysis Workflow
 
-The final analysis needs the experiment assignment file and operational records, plus at least 12 months of pre-period outlet-month outcomes and the post period for the historical DiD.
+1. Synthetic data generation.
+2. Data loading and quality validation.
+3. Customer retention analysis.
+4. Statistical significance testing.
+5. Outlet-wise retention analysis.
+6. Revenue analysis.
+7. Cancellation and no-show analysis.
+8. Customer segmentation.
+9. Difference-in-Differences analysis.
+10. CUPED adjustment.
+11. Randomization and baseline balance checks.
+12. Data visualization.
+13. Business insights and recommendations.
 
-Expected source areas:
+## 7. Key Analytical Results
 
-- Appointments: appointment/client/outlet identifiers, booking and slot timestamps, status and cancellation timestamp.
-- Services: raw service name, category, duration, list price and discount.
-- Stylists: stylist ID, outlet, level, tenure and leaving date.
-- Product sales: SKU, quantity, gross/net amount and visit/appointment linkage.
-- Walk-ins: outlet, visit time, service and amount; client identity may be unavailable.
+### A/B Testing Results
 
-**Privacy:** Do not commit personal data, phone numbers, names, dates of birth, client IDs or raw commercial records to a public GitHub repository. Use synthetic or anonymised sample data for a public portfolio. Keep raw data local and excluded by `.gitignore`.
+| Metric | Treatment | Control |
+|---|---:|---:|
+| Customers | 4,988 | 5,012 |
+| Retention Rate | 35.49% | 30.69% |
 
-## Setup
+**Observed retention improvement: +4.80 percentage points.**
 
-Python 3.10+ is recommended.
+### Difference-in-Differences
+
+| Metric | Result |
+|---|---:|
+| Treatment group change | -55.35 pp |
+| Control group change | -60.51 pp |
+| DiD effect | +5.16 pp |
+
+### CUPED Analysis
+
+| Metric | Result |
+|---|---:|
+| CUPED theta | 0.0043 |
+| Original treatment effect | +4.80 pp |
+| CUPED-adjusted effect | +4.80 pp |
+
+### Randomization Checks
+
+| Check | Result |
+|---|---:|
+| SRM p-value | 0.8103 |
+| Baseline visits SMD | 0.0033 |
+
+No significant sample ratio mismatch was detected, and baseline visits were well-balanced between the two groups.
+
+### Revenue Analysis
+
+| Metric | Result |
+|---|---:|
+| Treatment average revenue | ₹2,914.21 |
+| Control average revenue | ₹2,866.76 |
+| Difference | +₹47.45 |
+
+### Customer Segment Analysis
+
+| Segment | Treatment Retention | Control Retention | Treatment Lift |
+|---|---:|---:|---:|
+| High Frequency | 38% | 30% | +7.31 pp |
+| Low Frequency | 34% | 31% | +3.45 pp |
+
+*All results above are from the simulated dataset and should be interpreted as illustrative findings.*
+
+## 8. Business Recommendations
+
+Based on the simulated analysis:
+
+- Personalised reminders show a positive customer-retention signal.
+- The high-frequency customer segment shows a larger observed retention lift.
+- Outlet-level performance should be monitored before implementation.
+- Revenue impact should be validated using a clearly defined post-treatment revenue window.
+- A longer real-world experiment should be conducted before a full business rollout.
+
+## 9. Important Limitations
+
+- The dataset is synthetic and does not represent actual salon customers.
+- The treatment effects are simulated, not measured real-world effects.
+- CUPED produced negligible adjustment because the baseline covariate had a weak relationship with the simulated retention outcome.
+- The DiD estimate is exploratory; its assumptions, particularly parallel trends, cannot be established from this simple pre/post setup.
+- The results should not be treated as proof of actual business impact.
+- Further validation with real operational data is necessary.
+
+## 10. How to Run the Project
+
+### Clone the repository
 
 ```bash
-git clone <YOUR-GITHUB-REPOSITORY-URL>
+git clone https://github.com/Ansar-Oni/salon-experiment-causal-analysis
 cd salon-experiment-causal-analysis
-
-python -m venv .venv
-
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
-
-# macOS / Linux
-source .venv/bin/activate
-
-pip install -r requirements.txt
-jupyter lab
 ```
 
-Open `notebooks/02_analysis.ipynb` and follow the sections in order. The notebook is a scaffold and will require the actual dataset and a confirmed column mapping before the analysis can run end-to-end.
+### Create a virtual environment
 
-## Analysis sequence
+```bash
+python -m venv .venv
+```
 
-1. Inspect schemas, row counts, date ranges, keys and missingness.
-2. Recover likely no-shows using the documented rule and manually audit a 300-record sample.
-3. Map outlet-specific service names using RapidFuzz; auto-map scores >=90, manually review 70–89, and leave scores <70 unmapped.
-4. Build visit-level and client-level tables; reconcile revenue to POS within 0.5%.
-5. Validate one assignment per client and run SRM on the assignment file before exclusions.
-6. Check pre-treatment balance; report standardised mean differences (SMDs).
-7. Estimate ITT effects and 95% confidence intervals; bootstrap at client level.
-8. Run DiD, event study, pre-trend slope comparison, placebo dates and sensitivity analysis.
-9. Estimate segment interactions and apply Benjamini-Hochberg FDR control.
-10. Apply CUPED using pre-randomisation covariates only; compare confidence-interval widths and sample savings.
-11. Apply the pre-specified GO / NO-GO / EXTEND rule.
+### Activate on Windows PowerShell
 
-## Important analytical cautions
+```powershell
+.venv\Scripts\Activate.ps1
+```
 
-- Do not treat anonymous walk-ins as identifiable clients for retention.
-- Do not silently combine cancellations and no-shows.
-- Do not run SRM on a post-exclusion analysis table.
-- Do not bootstrap appointment rows; resample clients.
-- With staggered rollout, avoid naive two-way fixed-effects DiD when treatment effects may vary over time.
-- With few treated clusters, conventional cluster-robust standard errors may be unreliable.
-- Failure to reject a pre-trend test does not prove parallel trends.
-- CUPED covariates and theta must use pre-treatment information only.
-- Do not claim results until actual data have been analysed.
+### Install dependencies
 
-## Deliverables
+```bash
+pip install -r requirements.txt
+```
 
-- `docs/01_experiment_design_v2.docx` — revised experiment design and analysis plan.
-- `notebooks/02_analysis.ipynb` — reproducible analysis notebook scaffold.
-- `outputs/` — generated result tables and decision-memo inputs.
-- `reports/` — exported figures and final one-page decision memo (to be added after analysis).
+### Generate the synthetic dataset
 
-## License and data provenance
+```bash
+python src/generate_data.py
+```
 
-Add a license only after deciding how you want the code shared. The case study is fictional. Any future dataset must have its source, permissions, anonymisation method and limitations documented here.
+### Run the analysis
+
+Open:
+
+```text
+notebooks/02_analysis.ipynb
+```
+
+Select the project virtual environment as the Jupyter kernel and execute the notebook cells in sequence.
+
+## 11. Project Deliverables
+
+- Synthetic data generation script.
+- Experiment design documentation.
+- Data quality and validation workflow.
+- A/B test and retention analysis.
+- DiD and CUPED analysis.
+- Randomization checks.
+- Business-focused visualizations.
+- Business insights and recommendations.
+
+## 12. Conclusion
+
+This project demonstrates an end-to-end data science workflow combining experimental design, statistical analysis, causal inference, customer segmentation and business decision-making.
+
+It highlights how Python-based analytics can help evaluate customer engagement strategies and translate analytical findings into business recommendations.
+
+**Project developed for educational and data science portfolio purposes.**
+
+**Author:** Ansar Malik
